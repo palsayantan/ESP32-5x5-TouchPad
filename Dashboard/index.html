@@ -1,0 +1,598 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+<title>Touch Matrix</title>
+<style>
+body, html {
+  background: rgba(230,190,138,0.2);
+  text-align: center;
+  position: fixed;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.container {
+  display: inline;
+  float: right;
+  margin-top: 38px;
+  margin-right: 40px;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .3); 
+  background-color: rgba(255, 255, 255, .4);
+  backdrop-filter: blur(5px);
+}
+
+.main{
+  width: 65%;
+  height: 215mm;
+  border-radius: 8mm;
+}
+.sub1{
+  width: 65%;
+  height: 35mm;
+  border-radius: 4mm;
+}
+.sub2{
+  width: 66%;
+  height: 105mm;
+  border-radius: 10mm;
+}
+.sub3{
+  width: 32%;
+  height: 100mm;
+  border-radius: 8mm;
+}
+.sub4{
+  width: 32%;
+  height: 45mm;
+  border-radius: 8mm;
+}
+
+
+.roundedCorner
+{
+  position: fixed;
+  float: left;
+  margin: auto;
+  margin-top: 5%;
+  margin-left: 5%;
+  width:120mm;
+  height:180mm;
+  border-radius:8mm;
+  border: solid 1px #555;
+      background-color: #222;
+      box-shadow: 1px 1px 0px #667867,
+            2px 2px 0px #667867,
+            3px 3px 0px #667867,
+            4px 4px 0px #667867,
+            5px 5px 0px #667867,
+            6px 6px 0px #667867,
+            7px 7px 0px #667867;
+}
+
+#matrix {
+  margin: 0 auto;
+  padding: 5px;
+}
+
+#matrix tr, td {
+  padding: 2mm;
+}
+
+#matrix button {
+  height: 18.5mm;
+  width:  18.5mm;
+  display:block;
+  border-radius: 50%;
+  border: none;
+  outline: 1.2mm solid white;
+  background-color: rgba(255, 180, 0, 0.8);
+}
+
+#matrix button:hover {
+  background-color: rgb(255, 200, 0);
+}
+
+.txt{
+  margin-top: 5%;
+  padding-bottom: 5%;
+}
+
+.title {
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 72px;
+  color:  #D5AD6D;
+  background: -webkit-linear-gradient(transparent, transparent),
+             -webkit-linear-gradient(top, rgba(213,173,109,1) 0%, rgba(213,173,109,1) 26%, rgba(226,186,120,1) 35%, rgba(163,126,67,1) 45%, rgba(145,112,59,1) 61%, rgba(213,173,109,1) 100%);
+  background: -o-linear-gradient(transparent, transparent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.tab {
+  display: none;
+}
+
+.tab.active {
+  display: block;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #F0E68C;
+}
+
+.topnav a{
+  color: #8B4513;
+  text-align: center;
+  padding: 15px 45px;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-size: 20px;
+}
+.topbar {
+  float: right;
+  display: inline-block;
+  padding: 15px;
+  margin: 5px;
+}
+
+.topbar:hover {
+  background-color: #DAA520;
+  color: black;
+}
+
+.topbar.active {
+  background-color: #DAA520;
+  color: white;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 12.7vw 12.7vw 12.7vw 12.7vw 12.7vw;
+  grid-template-rows: 16.65vh 16.65vh 16.65vh 16.65vh 16.65vh;
+  grid-gap: 5px;
+  background-color: #CFB53B;
+  padding: 5px;
+  border-radius:8mm;
+}
+
+.grid-container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  font-size: 1.2em;
+  border-radius:8mm;
+}
+
+.input {
+  height: 30px;
+  margin: 5px;
+  border: 1px solid #bba14f;
+  border-radius: 20px;
+  font-size: 17px;
+}
+
+.toplabel {
+  float: left;
+  font-family: sans-serif;
+  font-size: 1.8em;
+  color: #8B4513;
+  margin-top: 1vw;
+  margin-left: 5vw;
+  padding: 12px;
+  border-radius: 10px;
+  width: 115mm;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2); 
+  background-color: rgba(255, 255, 255, .3);
+  backdrop-filter: blur(5px);
+}
+
+.dropbtn {
+  position: fixed;
+  bottom: 1vw;
+  width: 10vw;
+  padding: 16px;
+  font-size: 1.5em;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+}
+.save{
+  left: 5vw;
+  background-color: #41c457;
+
+}
+.reset{
+  left: 19vw;
+  background-color: #c45941;
+}
+
+.tindieBanner {
+  margin: 10px; 
+  font-family: sans-serif; 
+  text-decoration: none; 
+  font-size: 50px; 
+  font-weight: bold;
+  color: #DAA520;
+}
+
+</style>
+</head>
+<body>
+<svg  style="display: none">
+  <defs>
+    <symbol id="img" viewbox="0 0 55 55">
+      <line x1="0" y1="2" x2="55" y2="55" style="stroke:#222;stroke-width:5" />
+      <line x1="0" y1="55" x2="55" y2="2" style="stroke:#222;stroke-width:5" />
+      <rect x="21" y="22" width="13" height="13" style="fill:#222;" />
+    </symbol>
+  </defs>
+  <use href="#img"/>
+</svg>
+  <div class="topnav">
+  <a href="#About" data-tab="About" class="topbar">About</a>
+  <a href="#Configure" data-tab="Configure" class="topbar">Configure</a>
+  <a href="#Edit" data-tab="Edit" class="topbar">Edit</a>
+  <a href="#Home" data-tab="Home" class="topbar active">Home</a>
+  </div>
+<span class="toplabel">Connection Type : <span id="label1">BLE</span></span>
+  <div id="Home" class="tab active">
+    <div class="container main">
+      <div class="grid-container">
+        <div id="btn11"></div>
+        <div id="btn12"></div>
+        <div id="btn13"></div>
+        <div id="btn14"></div>
+        <div id="btn15"></div>
+
+        <div id="btn21"></div>
+        <div id="btn22"></div>
+        <div id="btn23"></div>
+        <div id="btn24"></div>
+        <div id="btn25"></div>
+
+        <div id="btn31"></div>
+        <div id="btn32"></div>
+        <div id="btn33"></div>
+        <div id="btn34"></div>
+        <div id="btn35"></div>
+
+        <div id="btn41"></div>
+        <div id="btn42"></div>
+        <div id="btn43"></div>
+        <div id="btn44"></div>
+        <div id="btn45"></div>
+
+        <div id="btn51"></div>
+        <div id="btn52"></div>
+        <div id="btn53"></div>
+        <div id="btn54"></div>
+        <div id="btn55"></div>
+      </div>
+    </div>
+  
+  </div>
+  <div id="Edit" class="tab">
+    <div class="container main">
+      <div class="grid-container">
+        <div>
+          <div id="Input11"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input11');"/>
+            <input type="button" value="Delete" onclick="delInput('Input11')" />
+          </div>
+        <div>
+          <div id="Input12"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input12');"/>
+            <input type="button" value="Delete" onclick="delInput('Input12')" />
+          </div>
+        <div>
+          <div id="Input13"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input13');"/>
+            <input type="button" value="Delete" onclick="delInput('Input13')" />
+          </div>
+        <div>
+          <div id="Input14"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input14');"/>
+            <input type="button" value="Delete" onclick="delInput('Input14')" />
+          </div>
+        <div>
+          <div id="Input15"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input15');"/>
+            <input type="button" value="Delete" onclick="delInput('Input15')" />
+          </div>
+
+        <div>
+          <div id="Input21"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input21');"/>
+            <input type="button" value="Delete" onclick="delInput('Input21')" />
+          </div>
+        <div>
+          <div id="Input22"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input22');"/>
+            <input type="button" value="Delete" onclick="delInput('Input22')" />
+          </div>
+        <div>
+          <div id="Input23"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input23');"/>
+            <input type="button" value="Delete" onclick="delInput('Input23')" />
+          </div>
+        <div>
+          <div id="Input24"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input24');"/>
+            <input type="button" value="Delete" onclick="delInput('Input24')" />
+          </div>
+        <div>
+          <div id="Input25"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input25');"/>
+            <input type="button" value="Delete" onclick="delInput('Input25')" />
+          </div>
+
+        <div>
+          <div id="Input31"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input31');"/>
+            <input type="button" value="Delete" onclick="delInput('Input31')" />
+          </div>
+        <div>
+          <div id="Input32"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input32');"/>
+            <input type="button" value="Delete" onclick="delInput('Input32')" />
+          </div>
+        <div>
+          <div id="Input33"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input33');"/>
+            <input type="button" value="Delete" onclick="delInput('Input33')" />
+          </div>
+        <div>
+          <div id="Input34"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input34');"/>
+            <input type="button" value="Delete" onclick="delInput('Input34')" />
+          </div>
+        <div>
+          <div id="Input35"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input35');"/>
+            <input type="button" value="Delete" onclick="delInput('Input35')" />
+          </div>
+
+        <div>
+          <div id="Input41"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input41');"/>
+            <input type="button" value="Delete" onclick="delInput('Input41')" />
+          </div>
+        <div>
+          <div id="Input42"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input42');"/>
+            <input type="button" value="Delete" onclick="delInput('Input42')" />
+          </div>
+        <div>
+          <div id="Input43"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input43');"/>
+            <input type="button" value="Delete" onclick="delInput('Input43')" />
+          </div>
+        <div>
+          <div id="Input44"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input44');"/>
+            <input type="button" value="Delete" onclick="delInput('Input44')" />
+          </div>
+        <div>
+          <div id="Input45"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input45');"/>
+            <input type="button" value="Delete" onclick="delInput('Input45')" />
+          </div>
+
+        <div>
+          <div id="Input51"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input51');"/>
+            <input type="button" value="Delete" onclick="delInput('Input51')" />
+          </div>
+        <div>
+          <div id="Input52"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input52');"/>
+            <input type="button" value="Delete" onclick="delInput('Input52')" />
+          </div>
+        <div>
+          <div id="Input53"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input53');"/>
+            <input type="button" value="Delete" onclick="delInput('Input53')" />
+          </div>
+        <div>
+          <div id="Input54"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input54');"/>
+            <input type="button" value="Delete" onclick="delInput('Input54')" />
+          </div>
+        <div>
+          <div id="Input55"></div>
+            <input class="input"/>
+            <input type="button" value="Add Key" onclick="addInput('Input55');"/>
+            <input type="button" value="Delete" onclick="delInput('Input55')" />
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="Configure" class="tab">
+    <div class="container sub1">
+    </div>
+    <div class="container sub1">
+    </div>
+    <div class="container sub1">
+    </div>
+    <div class="container sub1">
+    </div>
+    <div class="container sub1">
+    </div>
+    <div class="container sub1">
+    </div>
+  </div>
+  <div id="About" class="tab">
+    <div class="container sub2">
+    </div>
+    <div class="container sub3">
+    </div>
+    <div class="container sub4">
+    </div>
+    <div class="container sub4">
+    </div>
+  </div>
+
+  <div class="roundedCorner">
+  <div class="txt"><text class = "title" text-anchor="middle" x="400" y="200">ESP32 Touch Matrix</text></div>
+    <hr size="5" width="85%" color="white">  
+    <div>
+      <table id="matrix">
+        <tr>
+          <td><button id="b11"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b12"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b13"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b14"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b15"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+        </tr>
+      
+        <tr>
+          <td><button id="b21"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b22"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b23"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b24"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b25"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+        </tr>
+      
+        <tr>
+          <td><button id="b31"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b32"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b33"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b34"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b35"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+        </tr>
+      
+        <tr>
+          <td><button id="b41"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b42"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b43"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b44"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b45"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+        </tr>
+      
+        <tr>
+          <td><button id="b51"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b52"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b53"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b54"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b55"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<span>
+  <button onclick="save()" class="dropbtn save">Save</button>
+  <button onclick="reset()" class="dropbtn reset">Reset</button>
+</span>
+      
+</body>
+<script>
+function Tabs() {
+  var bindAll = function() {
+    var menuElements = document.querySelectorAll('[data-tab]');
+    for(var i = 0; i < menuElements.length ; i++) {
+      menuElements[i].addEventListener('click', change, false);
+    }
+  }
+
+  var clear = function() {
+    var menuElements = document.querySelectorAll('[data-tab]');
+    for(var i = 0; i < menuElements.length ; i++) {
+      menuElements[i].classList.remove('active');
+      var id = menuElements[i].getAttribute('data-tab');
+      document.getElementById(id).classList.remove('active');
+    }
+  }
+
+  var change = function(e) {
+    clear();
+    e.target.classList.add('active');
+    var id = e.currentTarget.getAttribute('data-tab');
+    document.getElementById(id).classList.add('active');
+  }
+
+  bindAll();
+}
+
+var connectTabs = new Tabs();
+var choices = [];
+
+var modifiers = ["", "CTRL", "SHIFT", "ALT", "GUI", "UP", "DOWN", "LEFT", "RIGHT", "BACKSPACE", "TAB", "RETURN", 
+               "ESC", "INSERT", "DELETE", "PAGE UP", "PAGE DOWN", "HOME", "END", "CAPS LOCK", "SPACE"];
+
+var mediaKeys = ["NEXT TRACK", "PREVIOUS TRACK", "STOP", "PLAY/PAUSE", "MUTE", "VOLUME UP", "VOLUME DOWN", 
+                 "MY COMPUTER", "CALCULATOR", "WWW HOME", "WWW BOOKMARKS", "WWW SEARCH", "WWW STOP", 
+                 "WWW BACK", "EMAIL READER"];
+
+for (let i = 0; i < 21; i++) {
+    choices.push(modifiers[i]);
+}
+
+for (let i = 33; i < 127; i++) {
+    choices.push(String.fromCharCode(i));
+}
+
+for (let i = 1; i < 13; i++) {
+    choices.push("F"+[i]);
+}
+
+for (let i = 0; i < 15; i++) {
+    choices.push(mediaKeys[i]);
+}
+
+function addInput(divName) {
+    var newDiv = document.createElement('div');
+    var selectHTML = "";
+    selectHTML="<select>";
+    for(i = 0; i < choices.length; i = i + 1) {
+        selectHTML += "<option value='" + choices[i] + "'>" + choices[i] + "</option>";
+    }
+    selectHTML += "</select>";
+    newDiv.innerHTML = selectHTML;
+
+    if (document.getElementById(divName).childElementCount < 4) {
+      document.getElementById(divName).appendChild(newDiv);
+  }
+}
+
+function delInput(divName) {
+  var selectDiv = document.getElementById(divName);
+  selectDiv.removeChild(selectDiv.lastChild);
+}
+
+function save() {
+   console.log(document.getElementById("Input11").getElementsByTagName("select"));
+}
+
+</script>
+</html> 

@@ -1,0 +1,383 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+<title>Touch Matrix</title>
+<style>
+body, html {
+  background: rgba(230,190,138,0.2);
+  text-align: center;
+  position: fixed;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #F0E68C;
+}
+
+.menu2 {
+  float: left;
+}
+
+.menu1 {
+  float: right;
+}
+
+.topnav a {
+  color: #8B4513;
+  text-align: center;
+  padding: 15px 45px;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-size: 20px;
+}
+
+.topnav a:hover {
+  background-color: #DAA520;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #DAA520;
+  color: white;
+}
+
+.container {
+  display: inline;
+  width: 25%;
+  height: 180mm;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2); 
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, .15);
+  backdrop-filter: blur(5px);
+}
+
+.con_left{
+  float: left;
+  margin-left: 50px;
+}
+.con_right{
+  float: right;
+  margin-right: 50px;
+}
+
+.dropbtn {
+  color: white;
+  padding: 16px;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.conection{
+  width: 100%;
+  background-color: #41c4a8;
+}
+.mode{
+  width: 100%;
+  background-color: #8941c4;
+}
+.set{
+  width: 100%;
+  background-color: #3498DB;
+}
+.save{
+  width: 30%;
+  position: fixed;
+  bottom: 0;
+  left: 50px;
+  border-radius: 10px;
+  background-color: #41c457;
+
+}
+.reset{
+  width: 30%;
+  position: fixed;
+  bottom: 0;
+  right: 50px;
+  border-radius: 10px;
+  background-color: #c45941;
+
+}
+.dropbtn:hover, .dropbtn:focus {
+  opacity: 0.85;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content p {
+  color: black;
+  padding: 6px;
+  font-family: sans-serif;
+  font-size: 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown p:hover {background-color: #ddd;}
+
+.show {
+  display: block;
+  width: 100%;
+}
+
+.label{
+  font-family: sans-serif;
+  font-size: 25px;
+  padding: 20px;
+  padding-top: 25px;
+  display: inline;
+}
+.roundedCorner
+{
+  margin: auto;
+  margin-top: 75px;
+  width:120mm;
+  height:180mm;
+  border-radius:8mm;
+  border: solid 1px #555;
+      background-color: #222;
+      box-shadow: 1px 1px 0px #667867,
+            2px 2px 0px #667867,
+            3px 3px 0px #667867,
+            4px 4px 0px #667867,
+            5px 5px 0px #667867,
+            6px 6px 0px #667867,
+            7px 7px 0px #667867;
+}
+
+#matrix {
+  margin: 0 auto;
+  padding: 5px;
+}
+
+#matrix tr, td {
+  padding: 2mm;
+}
+
+#matrix button {
+  height: 18.5mm;
+  width:  18.5mm;
+  display:block;
+  border-radius: 50%;
+  border: none;
+  outline: 1.2mm solid white;
+  background-color: rgba(255, 180, 0, 0.8);
+}
+
+#matrix button:hover {
+  background-color: rgb(255, 200, 0);
+}
+
+.txt{
+  margin-top: 5%;
+  padding-bottom: 5%;
+}
+
+.title {
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 72px;
+  color:  #D5AD6D;
+  background: -webkit-linear-gradient(transparent, transparent),
+             -webkit-linear-gradient(top, rgba(213,173,109,1) 0%, rgba(213,173,109,1) 26%, rgba(226,186,120,1) 35%, rgba(163,126,67,1) 45%, rgba(145,112,59,1) 61%, rgba(213,173,109,1) 100%);
+  background: -o-linear-gradient(transparent, transparent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+</style>
+</head>
+<body onload="start()">
+<svg  style="display: none">
+  <defs>
+    <symbol id="img" viewbox="0 0 55 55">
+      <line x1="0" y1="2" x2="55" y2="55" style="stroke:#222;stroke-width:5" />
+      <line x1="0" y1="55" x2="55" y2="2" style="stroke:#222;stroke-width:5" />
+      <rect x="21" y="22" width="13" height="13" style="fill:#222;" />
+    </symbol>
+  </defs>
+  <use href="#img"/>
+</svg>
+<div class="topnav">
+  <a class="menu1 active" onclick="about()">About</a>
+  <a class="menu2 active" onclick="home()">Home</a>
+</div>
+
+<div>
+<span id="home"> 
+  <div class="container con_left">
+    <div>
+      <div class="dropdown">
+        <button onclick="setting('sta')" class="dropbtn set">Wifi STA Settings</button>      
+        <button onclick="setting('ap')" class="dropbtn set">Wifi AP Settings</button>
+        <button onclick="setting('ble')" class="dropbtn set">BLE Settings</button>
+        <button onclick="setting('bt')" class="dropbtn set">Bluetooth Settings</button>
+        <button onclick="setting('i2c')" class="dropbtn set">I2C Settings</button>
+        <button onclick="setting('serial')" class="dropbtn set">UART Settings</button>
+        <button onclick="setting('irset')" class="dropbtn set">IR Settings</button>
+        <button onclick="setting('rgb')" class="dropbtn set">RGB Settings</button>
+        <button onclick="setting('ota')" class="dropbtn set">OTA Settings</button>
+      </div>
+      <button onclick="save()" class="dropbtn save">Save</button>
+      <button onclick="reset()" class="dropbtn reset">Reset</button>
+    </div>
+  </div>
+  
+  <div class="container con_right">
+    <div>
+    <div class="dropdown">
+      <button onclick="myFunction('conection')" class="dropbtn conection">Connection type : <label id="label1">BLE</label></button>
+      <div id="myDropdown1" class="dropdown-content">
+        <p onclick="connect('BLE')">BLE</p>
+        <p onclick="connect('Bluetooth')">Bluetooth</p>
+        <p onclick="connect('wifiSta')">WiFi STA</p>
+        <p onclick="connect('wifiAP')">WiFi AP</p>
+        <p onclick="connect('UART')">UART</p>
+        <p onclick="connect('I2C')">I2C</p>
+        <p onclick="connect('IR')">IR</p>
+        <p onclick="connect('USB')">USB</p>
+      </div>
+    </div>
+      <button onclick="myFunction('mode')" class="dropbtn mode">Function : <label id="label2">Keyboard</label></button>
+      <div id="myDropdown2" class="dropdown-content">
+        <p onclick="mode('Keyboard')">Keyboard</p>
+        <p onclick="mode('Mouse')">Mouse</p>
+        <p onclick="mode('Keypad')">Keypad</p>
+        <p onclick="mode('Remote')">Remote</p>
+        <p onclick="mode('test')">Test</p>
+        <p onclick="mode('Custom 1')" id="custom1">Custom 1</p>
+        <p onclick="mode('Custom 2')" id="custom2">Custom 2</p>
+        <p onclick="mode('Custom 3')" id="custom3">Custom 3</p>
+        <p onclick="mode('Custom 4')" id="custom4">Custom 4</p>
+        <p onclick="mode('Custom 5')" id="custom4">Custom 5</p>
+      </div>
+    </div>
+  </div>
+</span> 
+
+<span id="about" > 
+  <div class="container con_left">
+  </div>
+  
+  <div class="container con_right">
+  </div>
+</span> 
+
+  <div class="roundedCorner">
+  <div class="txt"><text class = "title" text-anchor="middle" x="400" y="200">ESP32 Touch Matrix</text></div>
+    <hr size="5" width="85%" color="white">  
+    <div>
+      <table id="matrix">
+        <tr>
+          <td><button id="b11"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b12"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b13"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b14"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b15"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+        </tr>
+      
+        <tr>
+          <td><button id="b21"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b22"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b23"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b24"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b25"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+        </tr>
+      
+        <tr>
+          <td><button id="b31"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b32"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b33"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b34"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b35"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+        </tr>
+      
+        <tr>
+          <td><button id="b41"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b42"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b43"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b44"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b45"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+        </tr>
+      
+        <tr>
+          <td><button id="b51"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b52"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b53"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b54"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+          <td><button id="b55"><svg width="55" height="55"><use href="#img" /></svg></button></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+</body>
+<script>
+function start() {
+  document.getElementById("home").style.display = "block";
+  document.getElementById("about").style.display = "none";
+}
+
+function myFunction(name) {
+  if(name == "conection"){
+    document.getElementById("myDropdown1").classList.toggle("show");
+  }
+  if(name == "mode"){
+    document.getElementById("myDropdown2").classList.toggle("show");
+  }
+}
+
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+
+function connect(type) {
+  if (type) {
+    document.getElementById("label1").innerHTML = type;
+  }
+}
+
+function mode(name) {
+  if (name) {
+    document.getElementById("label2").innerHTML = name;
+  }
+}
+
+function home() {
+  document.getElementById("home").style.display = "block";
+  document.getElementById("about").style.display = "none";
+}
+function about() {
+  document.getElementById("home").style.display = "none";
+  document.getElementById("about").style.display = "block";
+}
+</script>
+</html> 
